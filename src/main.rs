@@ -1,5 +1,5 @@
-use structopt::StructOpt;
 use std::fmt;
+use structopt::StructOpt;
 
 /// search for a pattern in a file and display the lines that contains it
 #[derive(StructOpt)]
@@ -21,6 +21,13 @@ impl fmt::Display for CLI {
 }
 
 fn main() {
+    // Gets the struct from the command line arguments.
     let args = CLI::from_args();
-    println!("{}", args);
+    let content = std::fs::read_to_string(&args.path)
+        .expect("could not read file");
+    for line in content.lines() {
+        if line.contains(&args.pattern) {
+            println!("{}", line);
+        }
+    }
 }
