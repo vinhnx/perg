@@ -5,3 +5,4 @@ authors = ["Vinh Nguyen <vinhnguyen2308@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+structopt = "0.2.10"
