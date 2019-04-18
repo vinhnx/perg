@@ -23,10 +23,3 @@ fn main() {
         .expect("could not read file");
     perg::find_matches(&content, &args.pattern, &mut std::io::stdout());
 }
-
-#[test]
-fn test_find_match() {
-    let mut result = Vec::new();
-    perg::find_matches("hello world\nbye word", "hello", &mut result); // we give empty vector as "writer" in our test
-    assert_eq!(result, b"hello world\n"); // b: is byte string literal
-}
