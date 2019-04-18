@@ -1,5 +1,8 @@
 extern crate structopt;
+
 use std::fmt;
+use std::fs::File;
+use std::io::{BufReader, Read};
 use structopt::StructOpt;
 
 #[derive(StructOpt)]
@@ -19,8 +22,17 @@ impl fmt::Display for CLI {
 }
 
 fn main() {
+    // parse CLI arguments
     let args = CLI::from_args();
-    let content = std::fs::read_to_string(&args.path)
+    let file = File::open(&args.path)
         .expect("could not read file");
-    perg::find_matches(&content, &args.pattern, &mut std::io::stdout());
+    
+    // read content of file and appending to data
+    let mut data = String::new();
+    let mut reader = BufReader::new(file);
+    reader.read_to_string(&mut data)
+        .expect("unable to read string");
+
+    // find matching patterns  
+    perg::find_matches(&data, &args.pattern, &mut std::io::stdout());
 }
