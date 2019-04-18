@@ -1,3 +1,4 @@
+extern crate structopt;
 use std::fmt;
 use structopt::StructOpt;
 
