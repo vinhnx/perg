@@ -34,7 +34,7 @@ then install `perg` binary:
 ```bash
 ❯ git clone git@github.com:vinhnx/perg.git
 ❯ cd perg
-❯ cargo install
+❯ cargo install --path .
 ```
 
 ### Usage
