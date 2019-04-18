@@ -2,7 +2,13 @@
 name = "perg"
 version = "0.1.0"
 authors = ["Vinh Nguyen <vinhnguyen2308@gmail.com>"]
-edition = "2018"
+license = "MIT"
+description = "A tool to search files"
+readme = "README.md"
+homepage = "https://github.com/vinhnx/perg"
+repository = "https://github.com/vinhnx/perg"
+keywords = ["cli", "search", "demo"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 exitfailure = "0.5.1"
