@@ -1,8 +1,6 @@
 # perg
 
-perg is a micro command-line tool to search for given string inside a file, written in Rust. 
-
-Lightweight alternative for [`grep`](http://man7.org/linux/man-pages/man1/grep.1.html), without highlighting.
+A micro lightweight alternative to [`grep`](http://man7.org/linux/man-pages/man1/grep.1.html), without highlighting, written in Rust. Currently it only support local path.
 
 ```bash
 ❯ perg --help
