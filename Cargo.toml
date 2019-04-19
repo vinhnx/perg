@@ -11,8 +11,5 @@ keywords = ["cli", "search", "demo"]
 categories = ["command-line-utilities"]
 
 [dependencies]
-exitfailure = "0.5.1"
-structopt = "0.2.10"
-assert_cmd = "0.10"
-predicates = "1"
-tempfile = "3"
+structopt = "0.2.15"
+predicates = "1.0.0"
