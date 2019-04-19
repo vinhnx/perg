@@ -32,9 +32,7 @@ Using [Cargo](https://doc.rust-lang.org/cargo/getting-started/installation.html)
 then install `perg` binary:
 
 ```bash
-❯ git clone git@github.com:vinhnx/perg.git
-❯ cd perg
-❯ cargo install --path .
+❯ cargo install perg
 ```
 
 ### Usage
