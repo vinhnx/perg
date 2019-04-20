@@ -48,12 +48,25 @@ on current repo:
 
 on a test file, then search for a pattern:
 ```bash
-❯ echo "hello world\nhi world\nby world" >> test.txt
-❯ cat test.txt
+❯ echo "hello world\nhi world\nby world" >> test.md
+❯ cat test.md
     # hello world
     # hi world
     # by world
-❯ perg e test.txt
+❯ perg e test.md
+    # hello world
+    # bye world
+```
+
+###### Regular Expression
+
+`perg` also support regular expression search, like `grep`:
+```bash
+❯ perg "h[ei]" test.md
+    # hello world
+    # hi world
+
+❯ perg "hello|bye" test.md
     # hello world
     # bye world
 ```
