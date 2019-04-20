@@ -35,16 +35,12 @@ then install `perg` binary:
 
 ### Usage
 
-###### Quick example
-
 a `test.md` is included in this repo, to try out `perg`:
 ```bash
 ❯ perg crate test.md
     # hello world
     # hi world
 ```
-
-###### Regular Expression
 
 `perg` also support regular expression search, like `grep`:
 ```bash
