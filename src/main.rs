@@ -1,41 +1,45 @@
-extern crate regex;
-extern crate structopt;
+extern crate clap;
 
-use regex::Regex;
-use std::fmt;
+use clap::{App, Arg};
 use std::fs::File;
 use std::io::{BufReader, Read};
-use structopt::StructOpt;
 
 /*
     TODO:
     + case insensitive (-i)
     + highlight matches
+    + error reporting
     + mimic most of `grep` features, for education purposes
         > https://www.digitalocean.com/community/tutorials/using-grep-regular-expressions-to-search-for-text-patterns-in-linux#regular-expressions
 */
 
-#[derive(StructOpt, Debug)]
-struct CLI {
-    pattern: String,
-    #[structopt(parse(from_os_str))]
-    path: std::path::PathBuf,
-}
-
-impl fmt::Display for CLI {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(
-            f,
-            "CLI: \n> args: {}\n> path: {:?}",
-            self.pattern, self.path
-        )
-    }
-}
-
 fn main() {
+    let ignore_case_flag = Arg::with_name("ignore-case")
+        .short("i")
+        .long("ignore-case")
+        .help("Perform case insensitive matching. Default is case sensitive.");
+    let pattern = Arg::with_name("PATTERN")
+        .help("pattern to search, can use regular expression")
+        .required(true)
+        .index(1);
+    let file = Arg::with_name("FILE")
+        .help("path to file")
+        .required(true)
+        .index(2);
+
+    let command = App::new("perg")
+        .version("0.3.0")
+        .author("Vinh Nguyen <vinhnguyen2308@gmail.com>")
+        .about("perg is a small command-line tool to search for given string inside a file")
+        .arg(ignore_case_flag)
+        .arg(pattern)
+        .arg(file)
+        .get_matches();
+
     // parse CLI arguments
-    let args = CLI::from_args();
-    let file = File::open(&args.path).expect("could not read file");
+    let path = command.value_of("FILE").unwrap();
+    let pattern = command.value_of("PATTERN").unwrap();
+    let file = File::open(&path).expect("could not read file");
 
     // read content of file and appending to data
     let mut data = String::new();
@@ -44,7 +48,10 @@ fn main() {
         .read_to_string(&mut data)
         .expect("unable to read string");
 
-    // convert pattern into regular expression
-    let re = Regex::new(&args.pattern).unwrap();
-    perg::search(&data, &re, &mut std::io::stdout());
+    let should_ignore_case = command.is_present("ignore-case");
+    if should_ignore_case {
+        perg::search_case_insensitive(&data, &pattern, &mut std::io::stdout());
+    } else {
+        perg::search(&data, &pattern, &mut std::io::stdout());
+    }
 }
