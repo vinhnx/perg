@@ -59,6 +59,13 @@ a `test.md` is included in this repo, to try out `perg`:
     # end of file
 ```
 
+case insensitive search:
+```bash
+❯ perg -i I test.md
+    # hi world
+    # end of file
+```
+
 ## Help, feedback or suggestions?
 
 Feel free to contact me on [Twitter](https://twitter.com/vinhnx) for discussions, news & announcements & other projects. :rocket:
