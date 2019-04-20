@@ -1,6 +1,6 @@
 # perg
 
-A micro lightweight alternative to [`grep`](http://man7.org/linux/man-pages/man1/grep.1.html), without highlighting, written in Rust. Currently it only support local path.
+A micro lightweight implementation of [`grep`](http://man7.org/linux/man-pages/man1/grep.1.html), written in Rust.
 
 ```bash
 ❯ perg --help
