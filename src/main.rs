@@ -6,7 +6,7 @@ use std::io::{BufReader, Read};
 
 /*
     TODO:
-    + case insensitive (-i)
+    + [done] case insensitive (-i)
     + highlight matches
     + error reporting
     + mimic most of `grep` features, for education purposes
