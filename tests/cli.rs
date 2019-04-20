@@ -1,6 +1,10 @@
+extern crate regex;
+use regex::Regex;
+
 #[test]
-fn test_find_matches() {
+fn test_search() {
     let mut result = Vec::new();
-    perg::find_matches("lorem ipsum\ndolor sit amet", "lorem", &mut result);
-    assert_eq!(result, b"lorem ipsum\n");
+    let reg = Regex::new("h[ei]").unwrap();
+    perg::search("hello world\nhi world\nbye world", &reg, &mut result);
+    assert_eq!(result, b"hello world\nhi world\n");
 }

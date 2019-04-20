@@ -1,9 +1,11 @@
 extern crate structopt;
+extern crate regex;
 
 use std::fmt;
 use std::fs::File;
 use std::io::{BufReader, Read};
 use structopt::StructOpt;
+use regex::Regex;
 
 #[derive(StructOpt)]
 #[derive(Debug)]
@@ -33,6 +35,7 @@ fn main() {
     reader.read_to_string(&mut data)
         .expect("unable to read string");
 
-    // find matching patterns  
-    perg::find_matches(&data, &args.pattern, &mut std::io::stdout());
+    // convert pattern into regular expression
+    let re = Regex::new(&args.pattern).unwrap();
+    perg::search(&data, &re, &mut std::io::stdout());
 }
