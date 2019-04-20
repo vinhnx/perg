@@ -6,7 +6,6 @@ use std::fmt;
 use std::fs::File;
 use std::io::{BufReader, Read};
 use structopt::StructOpt;
-use std::env;
 
 /*
     TODO:
@@ -34,21 +33,18 @@ impl fmt::Display for CLI {
 }
 
 fn main() {
-    let vargs: Vec<String> = env::args().collect();
-    println!("{:?}", vargs);
-
     // parse CLI arguments
-    // let args = CLI::from_args();
+    let args = CLI::from_args();
     let file = File::open(&args.path).expect("could not read file");
 
-    // // read content of file and appending to data
-    // let mut data = String::new();
-    // let mut reader = BufReader::new(file);
-    // reader
-    //     .read_to_string(&mut data)
-    //     .expect("unable to read string");
+    // read content of file and appending to data
+    let mut data = String::new();
+    let mut reader = BufReader::new(file);
+    reader
+        .read_to_string(&mut data)
+        .expect("unable to read string");
 
-    // // convert pattern into regular expression
-    // let re = Regex::new(&args.pattern).unwrap();
-    // perg::search(&data, &re, &mut std::io::stdout());
+    // convert pattern into regular expression
+    let re = Regex::new(&args.pattern).unwrap();
+    perg::search(&data, &re, &mut std::io::stdout());
 }
