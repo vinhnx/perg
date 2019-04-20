@@ -37,25 +37,11 @@ then install `perg` binary:
 
 ###### Quick example
 
-on current repo:
+a `test.md` is included in this repo, to try out `perg`:
 ```bash
-❯ perg v src/main.rs
-    #[derive(StructOpt)]
-    #[derive(Debug)]
-```
-
-###### Another Example
-
-on a test file, then search for a pattern:
-```bash
-❯ echo "hello world\nhi world\nby world" >> test.md
-❯ cat test.md
+❯ perg crate test.md
     # hello world
     # hi world
-    # by world
-❯ perg e test.md
-    # hello world
-    # bye world
 ```
 
 ###### Regular Expression
@@ -69,6 +55,10 @@ on a test file, then search for a pattern:
 ❯ perg "hello|bye" test.md
     # hello world
     # bye world
+
+❯ perg "^(be)" test.md
+    # bye world
+    # end of file
 ```
 
 ## Help, feedback or suggestions?
