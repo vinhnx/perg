@@ -4,19 +4,21 @@ A micro lightweight alternative to [`grep`](http://man7.org/linux/man-pages/man1
 
 ```bash
 ❯ perg --help
-
-perg 0.1.0
+perg x.x.x
+Vinh Nguyen <vinhnguyen2308@gmail.com>
+perg is a small command-line tool to search for given string inside a file
 
 USAGE:
-    perg <pattern> <path>
+    perg [FLAGS] <PATTERN> <FILE>
 
 FLAGS:
-    -h, --help       Prints help information
-    -V, --version    Prints version information
+    -h, --help           Prints help information
+    -i, --ignore-case    Perform case insensitive matching. Default is case sensitive.
+    -V, --version        Prints version information
 
 ARGS:
-    <pattern>
-    <path>
+    <PATTERN>    pattern to search, can use regular expression
+    <FILE>       path to file
 ```
 
 ### Installation
