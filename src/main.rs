@@ -28,8 +28,6 @@ fn main() {
         .index(2);
 
     let command = App::new("perg")
-        .version("0.3.0")
-        .author("Vinh Nguyen <vinhnguyen2308@gmail.com>")
         .about("perg is a small command-line tool to search for given string inside a file")
         .arg(ignore_case_flag)
         .arg(pattern)
