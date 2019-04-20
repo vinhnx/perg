@@ -1,14 +1,13 @@
-extern crate structopt;
 extern crate regex;
+extern crate structopt;
 
+use regex::Regex;
 use std::fmt;
 use std::fs::File;
 use std::io::{BufReader, Read};
 use structopt::StructOpt;
-use regex::Regex;
 
-#[derive(StructOpt)]
-#[derive(Debug)]
+#[derive(StructOpt, Debug)]
 struct CLI {
     pattern: String,
     #[structopt(parse(from_os_str))]
@@ -17,7 +16,9 @@ struct CLI {
 
 impl fmt::Display for CLI {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "CLI: \n> args: {}\n> path: {:?}", 
+        write!(
+            f,
+            "CLI: \n> args: {}\n> path: {:?}",
             self.pattern, self.path
         )
     }
@@ -26,13 +27,13 @@ impl fmt::Display for CLI {
 fn main() {
     // parse CLI arguments
     let args = CLI::from_args();
-    let file = File::open(&args.path)
-        .expect("could not read file");
-    
+    let file = File::open(&args.path).expect("could not read file");
+
     // read content of file and appending to data
     let mut data = String::new();
     let mut reader = BufReader::new(file);
-    reader.read_to_string(&mut data)
+    reader
+        .read_to_string(&mut data)
         .expect("unable to read string");
 
     // convert pattern into regular expression
