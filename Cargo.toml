@@ -7,10 +7,10 @@ description = "perg is a small command-line tool to search for given string insi
 readme = "README.md"
 homepage = "https://github.com/vinhnx/perg"
 repository = "https://github.com/vinhnx/perg"
-keywords = ["cli", "search", "demo"]
+keywords = ["cli", "search"]
 categories = ["command-line-utilities"]
 
 [dependencies]
-structopt = "0.2.15"
 predicates = "1.0.0"
 regex = "1.1.6"
+clap = "2.33.0"
