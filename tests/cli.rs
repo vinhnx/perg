@@ -1,10 +1,33 @@
-extern crate regex;
-use regex::Regex;
+struct Sut {}
+impl Sut {
+    fn read() -> String {
+        "hello world\nhi world\nbye world\nend of file".to_string()
+    }
+}
 
 #[test]
-fn test_search() {
+fn test_normal_search() {
     let mut result = Vec::new();
-    let reg = Regex::new("h[ei]").unwrap();
-    perg::search("hello world\nhi world\nbye world", &reg, &mut result);
+    let sut = Sut::read();
+    let pattern = "h";
+    perg::search(&sut, &pattern, &mut result);
     assert_eq!(result, b"hello world\nhi world\n");
+}
+
+#[test]
+fn test_regular_expression_either() {
+    let mut result = Vec::new();
+    let sut = Sut::read();
+    let pattern = "h[ei]";
+    perg::search(&sut, &pattern, &mut result);
+    assert_eq!(result, b"hello world\nhi world\n");
+}
+
+#[test]
+fn test_regular_expression_either_start_of_line() {
+    let mut result = Vec::new();
+    let sut = Sut::read();
+    let pattern = "^[be]";
+    perg::search(&sut, &pattern, &mut result);
+    assert_eq!(result, b"bye world\nend of file\n");
 }
