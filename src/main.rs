@@ -6,11 +6,17 @@ use std::io::{BufReader, Read};
 
 /*
     TODO:
-    + [done] case insensitive (-i)
+    + test CLI (https://docs.rs/assert_cli/0.6.3/assert_cli/)
+    + line number
+    + filename
+    + handle pipe |
+        > https://crates.io/crates/atty
     + highlight matches
-    + error reporting
+    + error reporting (https://rust-lang-nursery.github.io/cli-wg/in-depth/human-communication.html)
     + mimic most of `grep` features, for education purposes
-        > https://www.digitalocean.com/community/tutorials/using-grep-regular-expressions-to-search-for-text-patterns-in-linux#regular-expressions
+        > ($ tldr grep)
+
+    + [done] case insensitive (-i)
 */
 
 fn main() {
@@ -44,7 +50,7 @@ fn main() {
     let mut reader = BufReader::new(file);
     reader
         .read_to_string(&mut data)
-        .expect("unable to read string");
+        .expect("unable to read string aaaa");
 
     let should_ignore_case = command.is_present("ignore-case");
     if should_ignore_case {
