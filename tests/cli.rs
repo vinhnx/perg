@@ -1,7 +1,7 @@
 struct Sut {}
 impl Sut {
     fn read() -> String {
-        "hello world\nhi world\nbye world\nend of file".to_string()
+        format!("hello world\nhi world\nbye world\nend of file")
     }
 }
 
