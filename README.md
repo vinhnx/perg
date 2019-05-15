@@ -41,7 +41,7 @@ then install `perg` binary:
 
 a `test.md` is included in this repo, to try out `perg`:
 ```bash
-❯ perg crate test.md
+❯ perg h test.md
     # hello world
     # hi world
 ```
