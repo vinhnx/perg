@@ -9,8 +9,6 @@ use std::io::{BufReader, Read};
     + test CLI (https://docs.rs/assert_cli/0.6.3/assert_cli/)
     + line number
     + filename
-    + handle pipe |
-        > https://crates.io/crates/atty
     + highlight matches
     + error reporting (https://rust-lang-nursery.github.io/cli-wg/in-depth/human-communication.html)
     + mimic most of `grep` features, for education purposes
@@ -53,9 +51,5 @@ fn main() {
         .expect("unable to read string aaaa");
 
     let should_ignore_case = command.is_present("ignore-case");
-    if should_ignore_case {
-        perg::search_case_insensitive(&data, &pattern, &mut std::io::stdout());
-    } else {
-        perg::search(&data, &pattern, &mut std::io::stdout());
-    }
+    perg::search(should_ignore_case, &data, &pattern, &mut std::io::stdout());
 }

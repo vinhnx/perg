@@ -1,7 +1,7 @@
 struct Sut {}
 impl Sut {
     fn read() -> String {
-        format!("hello world\nhi world\nbye world\nend of file")
+        format!("Title\nhello world\nhi world\nbye world\nend of file")
     }
 }
 
@@ -10,8 +10,17 @@ fn test_normal_search() {
     let mut result = Vec::new();
     let sut = Sut::read();
     let pattern = "h";
-    perg::search(&sut, &pattern, &mut result);
+    perg::search(false, &sut, &pattern, &mut result);
     assert_eq!(result, b"hello world\nhi world\n");
+}
+
+#[test]
+fn test_case_insensitive() {
+    let mut result = Vec::new();
+    let sut = Sut::read();
+    let pattern = "t";
+    perg::search(true, &sut, &pattern, &mut result);
+    assert_eq!(result, b"Title\n");
 }
 
 #[test]
@@ -19,7 +28,7 @@ fn test_regular_expression_either() {
     let mut result = Vec::new();
     let sut = Sut::read();
     let pattern = "h[ei]";
-    perg::search(&sut, &pattern, &mut result);
+    perg::search(false, &sut, &pattern, &mut result);
     assert_eq!(result, b"hello world\nhi world\n");
 }
 
@@ -28,6 +37,6 @@ fn test_regular_expression_either_start_of_line() {
     let mut result = Vec::new();
     let sut = Sut::read();
     let pattern = "^[be]";
-    perg::search(&sut, &pattern, &mut result);
+    perg::search(false, &sut, &pattern, &mut result);
     assert_eq!(result, b"bye world\nend of file\n");
 }
