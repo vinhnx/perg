@@ -1,6 +1,6 @@
 [package]
 name = "perg"
-version = "0.4.0"
+version = "0.5.0"
 authors = ["Vinh Nguyen <vinhnguyen2308@gmail.com>"]
 license = "MIT"
 description = "perg is a small command-line tool to search for given string inside a file"
