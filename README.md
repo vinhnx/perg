@@ -23,20 +23,6 @@ ARGS:
     <FILE>       path to file
 ```
 
-### Installation
-
-Using [Cargo](https://doc.rust-lang.org/cargo/getting-started/installation.html) via `rustup`:
-
-```bash
-❯ curl https://sh.rustup.rs -sSf | sh
-```
-
-then install `perg` binary:
-
-```bash
-❯ cargo install perg
-```
-
 ### Usage
 
 a `test.md` is included in this repo, to try out `perg`:
@@ -66,6 +52,20 @@ case insensitive search:
 ❯ perg -i I test.md
     # hi world
     # end of file
+```
+
+### Installation
+
+Using [Cargo](https://doc.rust-lang.org/cargo/getting-started/installation.html) via `rustup`:
+
+```bash
+❯ curl https://sh.rustup.rs -sSf | sh
+```
+
+then install `perg` binary:
+
+```bash
+❯ cargo install perg
 ```
 
 ## Help, feedback or suggestions?
