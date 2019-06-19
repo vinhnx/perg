@@ -7,7 +7,7 @@ It's mainly for my journey to learn Rust programming language and its fascinated
 ```bash
 ❯ perg --help
 perg x.x.x
-Vinh Nguyen <vinhnguyen2308@gmail.com>
+Vinh Nguyen <>
 perg is a small command-line tool to search for given string inside a file
 
 USAGE:
