@@ -2,7 +2,7 @@
 
 A micro lightweight implementation of [`grep`](http://man7.org/linux/man-pages/man1/grep.1.html), written in Rust.
 
-It's mainly for my journey to learn Rust programming language and its fascinated ecosystem, but feel free to use it if you like it. :smile:
+It's mainly for my journey to learn Rust programming language and its fascinated ecosystem, but feel free to use it if you like it. :smile
 
 ```bash
 ❯ perg --help
@@ -67,6 +67,11 @@ then install `perg` binary:
 ```bash
 ❯ cargo install perg
 ```
+
+### Rust Books
+
++ https://doc.rust-lang.org/book/
++ https://doc.rust-lang.org/rust-by-example/
 
 ## Help, feedback or suggestions?
 
