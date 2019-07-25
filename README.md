@@ -68,7 +68,7 @@ then install `perg` binary:
 ❯ cargo install perg
 ```
 
-## Rust Books
+## Rust Books 🦀
 
 + https://doc.rust-lang.org/book/
 + https://doc.rust-lang.org/rust-by-example/
