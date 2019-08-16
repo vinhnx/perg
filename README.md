@@ -2,7 +2,7 @@
 
 A micro lightweight implementation of [`grep`](http://man7.org/linux/man-pages/man1/grep.1.html), written in Rust.
 
-It's mainly for my journey to learn Rust programming language and its fascinated ecosystem, but feel free to use it if you like it. :smile:
+It's mainly for my journey to learn Rust programming language and its fascinated ecosystem, but feel free to use it. :smile:
 
 ```bash
 ❯ perg --help
@@ -25,31 +25,40 @@ ARGS:
 
 ### Usage
 
-a `test.md` is included in this repo, to try out `perg`:
+
+a `test.md` is included in this repo:
+
 ```bash
-❯ perg h test.md
+$ cat test.md
+hello world hi world bye world end of file Title
+```
+
+to try out `perg` on the included `test.md` file:
+
+```bash
+$ perg h test.md
     # hello world
     # hi world
 ```
 
 `perg` also support regular expression search, like `grep`:
 ```bash
-❯ perg "h[ei]" test.md
+$ perg "h[ei]" test.md
     # hello world
     # hi world
 
-❯ perg "hello|bye" test.md
+$ perg "hello|bye" test.md
     # hello world
     # bye world
 
-❯ perg "^(be)" test.md
+$ perg "^(be)" test.md
     # bye world
     # end of file
 ```
 
 case insensitive search:
 ```bash
-❯ perg -i I test.md
+$ perg -i I test.md
     # hi world
     # end of file
 ```
@@ -59,19 +68,21 @@ case insensitive search:
 Using [Cargo](https://doc.rust-lang.org/cargo/getting-started/installation.html) via `rustup`:
 
 ```bash
-❯ curl https://sh.rustup.rs -sSf | sh
+$ curl https://sh.rustup.rs -sSf | sh
 ```
 
 then install `perg` binary:
 
 ```bash
-❯ cargo install perg
+$ cargo install perg
 ```
 
 ## Rust Books 🦀
 
 + https://doc.rust-lang.org/book/
 + https://doc.rust-lang.org/rust-by-example/
+
+[As of now, Rust is one the most favorited programming according to StackOverflow](https://insights.stackoverflow.com/survey/2019). :gift:
 
 ## Help, feedback or suggestions?
 
