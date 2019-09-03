@@ -87,3 +87,7 @@ $ cargo install perg
 ## Help, feedback or suggestions?
 
 Feel free to contact me on [Twitter](https://twitter.com/vinhnx) for discussions, news & announcements & other projects. :rocket:
+
+## What's with the name? 
+
+Glad you asked, `perg` is just the reversed of `grep`.
