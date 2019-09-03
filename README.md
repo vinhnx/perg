@@ -1,5 +1,9 @@
 # perg
 
+[![](https://img.shields.io/crates/l/perg.svg?colorB=ff7155&style=flat-square)](https://crates.io/crates/perg)
+[![](https://img.shields.io/crates/v/perg.svg?colorB=225382&style=flat-square)](https://crates.io/crates/perg)
+
+
 https://crates.io/crates/perg
 
 A micro lightweight implementation of [`grep`](http://man7.org/linux/man-pages/man1/grep.1.html), written in Rust.
