@@ -7,7 +7,7 @@ https://crates.io/crates/perg
 
 A micro lightweight implementation of [`grep`](http://man7.org/linux/man-pages/man1/grep.1.html), written in Rust.
 
-It's mainly for my journey to learn Rust programming language and its fascinated ecosystem, but feel free to use it. :smile:
+It's mainly for my journey to learn [Rust programming language and its fascinated ecosystem](https://www.rust-lang.org), but feel free to use it. :smile:
 
 ```bash
 ❯ perg --help
