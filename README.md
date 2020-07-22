@@ -82,11 +82,7 @@ then install `perg` binary:
 $ cargo install perg
 ```
 
-altogether:
-
-```bash
-$ curl https://sh.rustup.rs -sSf | sh && cargo install perg
-```
+NOTE: if you see error "cargo command not found", it is because `cargo` executable is not yet added to your .bashrc/.zshrc yet. To mitigate this, just restart your Terminal/iTerm and it run `cargo install perg` again, should it fine.
 
 ## Rust Books 🦀
 
