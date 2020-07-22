@@ -82,6 +82,12 @@ then install `perg` binary:
 $ cargo install perg
 ```
 
+altogether:
+
+```bash
+$ curl https://sh.rustup.rs -sSf | sh && cargo install perg
+```
+
 ## Rust Books 🦀
 
 + https://doc.rust-lang.org/book/
