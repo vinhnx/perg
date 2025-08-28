@@ -1,6 +1,7 @@
 [package]
 name = "perg"
 version = "0.5.1"
+edition = "2021"
 authors = ["Vinh Nguyen <vinhnguyen2308@gmail.com>"]
 license = "MIT"
 description = "perg is a small command-line tool to search for given string inside a file"
@@ -11,6 +12,12 @@ keywords = ["cli", "search"]
 categories = ["command-line-utilities"]
 
 [dependencies]
-predicates = "1.0.0"
-regex = "1.5.5"
-clap = "2.33.0"
+anyhow = "1.0"
+clap = { version = "4.4", features = ["derive"] }
+regex = "1.10"
+walkdir = "2.4"
+
+[dev-dependencies]
+tempfile = "3.0"
+assert_cmd = "2.0"
+predicates = "3.0"

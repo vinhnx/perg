@@ -1,23 +1,20 @@
+//! # perg
+//!
+//! A fast text search tool similar to grep, written in Rust.
+//!
+//! This crate provides the core functionality for searching text patterns
+//! in files using regular expressions.
+
+pub mod cli;
+pub mod error;
+pub mod search;
+
+// Declare external dependencies for use in modules
+extern crate clap;
 extern crate regex;
-use regex::Regex;
+extern crate walkdir;
 
-#[allow(unused_must_use)]
-pub fn search(
-    is_case_insensitive: bool,
-    content: &str,
-    pattern: &str,
-    mut writer: impl std::io::Write,
-) {
-    let pattern = if is_case_insensitive {
-        pattern.to_lowercase()
-    } else {
-        pattern.to_string()
-    };
-
-    let regex = Regex::new(&pattern).unwrap();
-    for line in content.lines() {
-        if regex.is_match(line) {
-            writeln!(writer, "{}", line);
-        }
-    }
-}
+// Re-export commonly used types
+pub use cli::Args;
+pub use error::{PergError, Result};
+pub use search::{search_file, search_paths, SearchConfig};
