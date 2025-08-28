@@ -8,7 +8,7 @@ description = "A fast, feature-rich text search tool similar to grep, written in
 readme = "README.md"
 homepage = "https://github.com/vinhnx/perg"
 repository = "https://github.com/vinhnx/perg"
-keywords = ["cli", "search", "grep", "text", "regex", "tool"]
+keywords = ["cli", "search", "grep", "text", "regex"]
 categories = ["command-line-utilities"]
 
 [dependencies]
