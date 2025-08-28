@@ -1,14 +1,14 @@
 [package]
 name = "perg"
-version = "0.5.1"
+version = "0.6.0"
 edition = "2021"
 authors = ["Vinh Nguyen <vinhnguyen2308@gmail.com>"]
 license = "MIT"
-description = "perg is a small command-line tool to search for given string inside a file"
+description = "A fast, feature-rich text search tool similar to grep, written in Rust"
 readme = "README.md"
 homepage = "https://github.com/vinhnx/perg"
 repository = "https://github.com/vinhnx/perg"
-keywords = ["cli", "search"]
+keywords = ["cli", "search", "grep", "text", "regex", "tool"]
 categories = ["command-line-utilities"]
 
 [dependencies]
