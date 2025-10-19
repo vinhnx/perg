@@ -21,6 +21,7 @@ perg is a modern implementation of the classic grep utility, designed for speed 
 - **Show only matching parts** with the `-o` flag
 - **Context lines** with `-B` (before), `-A` (after), and `-C` (around) flags
 - **Limit matches** with the `-m` flag
+- **Colorized output** with the `--color` flag
 - **Multiple file/directory support**
 - **Proper error handling** and exit codes
 
@@ -163,6 +164,17 @@ $ perg -C 2 'pattern' file.txt
 ```bash
 $ perg -m 2 'pattern' file.txt
 # Show only the first 2 matches
+```
+
+**Colorized output:**
+
+```bash
+$ perg --color=always 'pattern' file.txt
+# Show matches with color highlighting
+$ perg --color=never 'pattern' file.txt  
+# Never show colors (plain text)
+$ perg --color=auto 'pattern' file.txt
+# Show colors automatically based on terminal support (default)
 ```
 
 **Multiple files:**

@@ -13,6 +13,8 @@
 //! - Count matching lines (`-c` flag)
 //! - Show only matching parts (`-o` flag)
 //! - Limit number of matches (`-m` flag)
+//! - Extended regular expressions (`-E` flag)
+//! - Colorized output (`--color` flag)
 //! - Invert match (`-v` flag)
 //! - Files with/without matches listing (`-l`/`-L` flags)
 //! - Reading from stdin when no file paths are provided

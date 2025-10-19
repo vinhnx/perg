@@ -1,6 +1,6 @@
 [package]
 name = "perg"
-version = "0.7.0"
+version = "0.8.0"
 edition = "2021"
 authors = ["Vinh Nguyen"]
 license = "MIT"
@@ -16,6 +16,7 @@ anyhow = "1.0"
 clap = { version = "4.4", features = ["derive"] }
 regex = "1.10"
 walkdir = "2.4"
+console = "0.15"
 
 [dev-dependencies]
 tempfile = "3.0"

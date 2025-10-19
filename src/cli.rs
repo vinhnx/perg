@@ -67,4 +67,12 @@ pub struct Args {
     /// Print only the matched (non-empty) parts of a matching line
     #[arg(short = 'o', long = "only-matching")]
     pub only_matching: bool,
+
+    /// Interpret pattern as extended regular expression (for grep compatibility)
+    #[arg(short = 'E', long = "extended-regexp")]
+    pub extended_regexp: bool,
+
+    /// Print colorized output
+    #[arg(long = "color", default_value = "auto")]
+    pub color: String,
 }

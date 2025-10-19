@@ -30,6 +30,8 @@ fn test_normal_search() {
         0,     // context
         None,  // max_count
         false, // only_matching
+        false, // extended_regexp
+        "auto".to_string(), // color
     );
 
     let mut result = Vec::new();
@@ -62,6 +64,8 @@ fn test_case_insensitive() {
         0,     // context
         None,  // max_count
         false, // only_matching
+        false, // extended_regexp
+        "auto".to_string(), // color
     );
 
     let mut result = Vec::new();
@@ -93,6 +97,8 @@ fn test_regular_expression_either() {
         0,     // context
         None,  // max_count
         false, // only_matching
+        false, // extended_regexp
+        "auto".to_string(), // color
     );
 
     let mut result = Vec::new();
@@ -125,6 +131,8 @@ fn test_regular_expression_either_start_of_line() {
         0,     // context
         None,  // max_count
         false, // only_matching
+        false, // extended_regexp
+        "auto".to_string(), // color
     );
 
     let mut result = Vec::new();
@@ -157,6 +165,8 @@ fn test_line_numbers() {
         0,     // context
         None,  // max_count
         false, // only_matching
+        false, // extended_regexp
+        "auto".to_string(), // color
     );
 
     let mut result = Vec::new();
@@ -190,6 +200,8 @@ fn test_invert_match() {
         0,     // context
         None,  // max_count
         false, // only_matching
+        false, // extended_regexp
+        "auto".to_string(), // color
     );
 
     let mut result = Vec::new();

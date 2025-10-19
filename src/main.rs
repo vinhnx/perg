@@ -32,6 +32,8 @@ fn main() {
         args.context,
         args.max_count,
         args.only_matching,
+        args.extended_regexp,
+        args.color,
     );
 
     // Perform search

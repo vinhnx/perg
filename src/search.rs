@@ -1,9 +1,32 @@
 use crate::error::{PergError, Result};
+use console::style;
 use regex::Regex;
 use std::fs::File;
 use std::io::{BufRead, BufReader, Write, stdin};
 use std::path::Path;
 use walkdir::WalkDir;
+
+/// Helper function to determine if we should use colors
+fn use_colors(color_option: &str) -> bool {
+    match color_option {
+        "always" => true,
+        "never" => false,
+        "auto" => console::colors_enabled(),
+        _ => console::colors_enabled(),
+    }
+}
+
+/// Helper function to colorize matches in a line
+fn colorize_matches(line: &str, regex: &Regex, color_option: &str) -> String {
+    if !use_colors(color_option) {
+        return line.to_string();
+    }
+    
+    // Use the regex to find all matches and replace them with colored versions
+    regex.replace_all(line, |caps: &regex::Captures| {
+        style(&caps[0]).red().bold().to_string()
+    }).to_string()
+}
 
 /// Search configuration
 #[derive(Debug, Clone)]
@@ -21,6 +44,8 @@ pub struct SearchConfig {
     pub context: usize,
     pub max_count: Option<usize>,
     pub only_matching: bool,
+    pub extended_regexp: bool,
+    pub color: String,
 }
 
 impl SearchConfig {
@@ -38,6 +63,8 @@ impl SearchConfig {
         context: usize,
         max_count: Option<usize>,
         only_matching: bool,
+        extended_regexp: bool,
+        color: String,
     ) -> Self {
         Self {
             pattern,
@@ -53,6 +80,8 @@ impl SearchConfig {
             context,
             max_count,
             only_matching,
+            extended_regexp,
+            color,
         }
     }
 }
@@ -178,7 +207,14 @@ pub fn search_file(
                 }
             } else {
                 // Output the full line with proper formatting
-                let output = format_match(config, file_path, line_idx + 1, &lines[line_idx]);
+                let original_line = &lines[line_idx];
+                let line_to_output = if use_colors(&config.color) && !config.only_matching {
+                    colorize_matches(original_line, &regex, &config.color)
+                } else {
+                    original_line.clone()
+                };
+                
+                let output = format_match_with_content(config, file_path, line_idx + 1, &line_to_output);
                 writeln!(writer, "{}", output)?;
             }
         } else {
@@ -354,7 +390,14 @@ pub fn search_stdin(config: &SearchConfig, writer: &mut impl Write) -> Result<()
                 }
             } else {
                 // Output the full line with proper formatting
-                let output = format_line(config, line_idx + 1, &lines[line_idx]);
+                let original_line = &lines[line_idx];
+                let line_to_output = if use_colors(&config.color) && !config.only_matching {
+                    colorize_matches(original_line, &regex, &config.color)
+                } else {
+                    original_line.clone()
+                };
+                
+                let output = format_line_with_content(config, line_idx + 1, &line_to_output);
                 writeln!(writer, "{}", output)?;
             }
         } else {
@@ -385,8 +428,39 @@ fn format_match(config: &SearchConfig, file_path: &str, line_number: usize, line
     output
 }
 
+/// Format a single match result for output with custom content
+fn format_match_with_content(config: &SearchConfig, file_path: &str, line_number: usize, line: &str) -> String {
+    let mut output = String::new();
+
+    if config.with_filename {
+        output.push_str(file_path);
+        output.push_str(":");
+    }
+
+    if config.line_number {
+        output.push_str(&line_number.to_string());
+        output.push_str(":");
+    }
+
+    output.push_str(line);
+    output
+}
+
 /// Format a line from stdin (without filename prefix)
 fn format_line(config: &SearchConfig, line_number: usize, line: &str) -> String {
+    let mut output = String::new();
+
+    if config.line_number {
+        output.push_str(&line_number.to_string());
+        output.push_str(":");
+    }
+
+    output.push_str(line);
+    output
+}
+
+/// Format a line from stdin with custom content
+fn format_line_with_content(config: &SearchConfig, line_number: usize, line: &str) -> String {
     let mut output = String::new();
 
     if config.line_number {
@@ -453,6 +527,8 @@ mod tests {
             0,            // context
             None,         // max_count
             false,        // only_matching
+            false,        // extended_regexp
+            "auto".to_string(), // color
         );
 
         let mut output = Vec::new();
@@ -484,6 +560,8 @@ mod tests {
             0,            // context
             None,         // max_count
             false,        // only_matching
+            false,        // extended_regexp
+            "auto".to_string(), // color
         );
 
         let mut output = Vec::new();
@@ -515,6 +593,8 @@ mod tests {
             0,            // context
             None,         // max_count
             false,        // only_matching
+            false,        // extended_regexp
+            "auto".to_string(), // color
         );
 
         let mut output = Vec::new();
