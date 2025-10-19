@@ -17,14 +17,16 @@ perg is a modern implementation of the classic grep utility, designed for speed 
 - **Filename display** with the `-H` flag
 - **Invert match** (show non-matching lines) with the `-v` flag
 - **Files with/without matches** listing with `-l`/`-L` flags
+- **Count matching lines** with the `-c` flag
+- **Show only matching parts** with the `-o` flag
+- **Context lines** with `-B` (before), `-A` (after), and `-C` (around) flags
+- **Limit matches** with the `-m` flag
 - **Multiple file/directory support**
 - **Proper error handling** and exit codes
 
 ```bash
 ❯ perg --help
-perg 0.5.1
-Vinh Nguyen <vinhnguyen2308@gmail.com>
-perg is a small command-line tool to search for given string inside a file
+A fast, feature-rich text search tool similar to grep, written in Rust
 
 Usage: perg [OPTIONS] <PATTERN> [PATH]...
 
@@ -33,16 +35,38 @@ Arguments:
   [PATH]...  Files or directories to search in
 
 Options:
-  -i, --ignore-case          Perform case insensitive matching
-  -n, --line-number          Show line numbers
-  -H, --with-filename        Show filenames
-  -r, --recursive            Recursively search directories
-  -s, --no-messages          Suppress error messages about inaccessible files
-  -v, --invert-match         Invert match: show lines that do NOT match the pattern
-  -l, --files-with-matches   Only show filenames that contain matches
-  -L, --files-without-match  Only show filenames that do NOT contain matches
-  -h, --help                 Print help
-  -V, --version              Print version information
+  -i, --ignore-case
+          Perform case insensitive matching
+  -n, --line-number
+          Show line numbers
+  -H, --with-filename
+          Show filenames
+  -r, --recursive
+          Recursively search directories
+  -s, --no-messages
+          Suppress error messages about inaccessible files
+  -v, --invert-match
+          Invert match: show lines that do NOT match the pattern
+  -l, --files-with-matches
+          Only show filenames that contain matches
+  -L, --files-without-match
+          Only show filenames that do NOT contain matches
+  -c, --count
+          Print a count of matching lines for each input file
+  -B, --before-context <BEFORE_CONTEXT>
+          Print NUM lines of leading context before matching lines [default: 0]
+  -A, --after-context <AFTER_CONTEXT>
+          Print NUM lines of trailing context after matching lines [default: 0]
+  -C, --context <CONTEXT>
+          Print NUM lines of output context [default: 0]
+  -m, --max-count <MAX_COUNT>
+          Stop reading a file after NUM matching lines
+  -o, --only-matching
+          Print only the matched (non-empty) parts of a matching line
+  -h, --help
+          Print help
+  -V, --version
+          Print version
 ```
 
 ## Usage
@@ -107,6 +131,38 @@ test.md
 ```bash
 $ perg -L world test.md
 # (shows files that don't contain "world")
+```
+
+**Count matching lines:**
+
+```bash
+$ perg -c world test.md
+test.md:2
+```
+
+**Show only matching parts:**
+
+```bash
+$ perg -o 'h[ei]' test.md
+hello
+hi
+```
+
+**Context lines around matches:**
+
+```bash
+# Show 1 line before and after each match
+$ perg -B 1 -A 1 'pattern' file.txt
+
+# Show 2 lines of context around matches
+$ perg -C 2 'pattern' file.txt
+```
+
+**Limit number of matches:**
+
+```bash
+$ perg -m 2 'pattern' file.txt
+# Show only the first 2 matches
 ```
 
 **Multiple files:**

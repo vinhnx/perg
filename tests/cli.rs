@@ -24,6 +24,12 @@ fn test_normal_search() {
         false, // invert_match
         false, // files_with_matches
         false, // files_without_match
+        false, // count
+        0,     // before_context
+        0,     // after_context
+        0,     // context
+        None,  // max_count
+        false, // only_matching
     );
 
     let mut result = Vec::new();
@@ -50,6 +56,12 @@ fn test_case_insensitive() {
         false, // invert_match
         false, // files_with_matches
         false, // files_without_match
+        false, // count
+        0,     // before_context
+        0,     // after_context
+        0,     // context
+        None,  // max_count
+        false, // only_matching
     );
 
     let mut result = Vec::new();
@@ -75,6 +87,12 @@ fn test_regular_expression_either() {
         false, // invert_match
         false, // files_with_matches
         false, // files_without_match
+        false, // count
+        0,     // before_context
+        0,     // after_context
+        0,     // context
+        None,  // max_count
+        false, // only_matching
     );
 
     let mut result = Vec::new();
@@ -101,6 +119,12 @@ fn test_regular_expression_either_start_of_line() {
         false, // invert_match
         false, // files_with_matches
         false, // files_without_match
+        false, // count
+        0,     // before_context
+        0,     // after_context
+        0,     // context
+        None,  // max_count
+        false, // only_matching
     );
 
     let mut result = Vec::new();
@@ -127,6 +151,12 @@ fn test_line_numbers() {
         false, // invert_match
         false, // files_with_matches
         false, // files_without_match
+        false, // count
+        0,     // before_context
+        0,     // after_context
+        0,     // context
+        None,  // max_count
+        false, // only_matching
     );
 
     let mut result = Vec::new();
@@ -154,6 +184,12 @@ fn test_invert_match() {
         true,  // invert_match
         false, // files_with_matches
         false, // files_without_match
+        false, // count
+        0,     // before_context
+        0,     // after_context
+        0,     // context
+        None,  // max_count
+        false, // only_matching
     );
 
     let mut result = Vec::new();

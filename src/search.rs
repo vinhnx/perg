@@ -1,7 +1,7 @@
 use crate::error::{PergError, Result};
 use regex::Regex;
 use std::fs::File;
-use std::io::{BufRead, BufReader, Write};
+use std::io::{BufRead, BufReader, Write, stdin};
 use std::path::Path;
 use walkdir::WalkDir;
 
@@ -15,6 +15,12 @@ pub struct SearchConfig {
     pub invert_match: bool,
     pub files_with_matches: bool,
     pub files_without_match: bool,
+    pub count: bool,
+    pub before_context: usize,
+    pub after_context: usize,
+    pub context: usize,
+    pub max_count: Option<usize>,
+    pub only_matching: bool,
 }
 
 impl SearchConfig {
@@ -26,6 +32,12 @@ impl SearchConfig {
         invert_match: bool,
         files_with_matches: bool,
         files_without_match: bool,
+        count: bool,
+        before_context: usize,
+        after_context: usize,
+        context: usize,
+        max_count: Option<usize>,
+        only_matching: bool,
     ) -> Self {
         Self {
             pattern,
@@ -35,6 +47,12 @@ impl SearchConfig {
             invert_match,
             files_with_matches,
             files_without_match,
+            count,
+            before_context,
+            after_context,
+            context,
+            max_count,
+            only_matching,
         }
     }
 }
@@ -78,35 +96,96 @@ pub fn search_file(
     let regex = Regex::new(&pattern)?;
 
     let mut has_matches = false;
-    let mut line_number = 0;
-
+    let mut match_count = 0;
+    let mut _line_number = 0;
+    let mut lines: Vec<String> = Vec::new();
+    let mut matching_line_indices = Vec::new();
+    
+    // Read all lines to enable context functionality
     for line in reader.lines() {
-        line_number += 1;
-        let line = line?;
-        let matches = regex.is_match(&line);
+        lines.push(line?);
+        _line_number += 1;
+    }
+
+    // Use context: if -C is specified, it overrides -A and -B
+    let before_context = if config.context > 0 { config.context } else { config.before_context };
+    let after_context = if config.context > 0 { config.context } else { config.after_context };
+
+    // First pass: find all matching lines
+    for (idx, line) in lines.iter().enumerate() {
+        let matches = regex.is_match(line);
 
         // Apply invert match logic
         let should_include = if config.invert_match { !matches } else { matches };
 
         if should_include {
             has_matches = true;
+            match_count += 1;
+            matching_line_indices.push(idx);
 
             // For files_with_matches/files_without_match modes, we just need to know if there are matches
             if config.files_with_matches || config.files_without_match {
                 continue;
             }
-
-            // Format and write the match
-            let output = format_match(config, file_path, line_number, &line);
-            writeln!(writer, "{}", output)?;
         }
+    }
+
+    // Handle count-only mode
+    if config.count {
+        writeln!(writer, "{}:{}", file_path, match_count)?;
+        return Ok(match_count > 0);
     }
 
     // Handle files_with_matches/files_without_match output
     if config.files_with_matches && has_matches {
         writeln!(writer, "{}", file_path)?;
+        return Ok(has_matches);
     } else if config.files_without_match && !has_matches {
         writeln!(writer, "{}", file_path)?;
+        return Ok(has_matches);
+    }
+
+    // Output results with context
+    let mut output_lines = std::collections::BTreeSet::new(); // Use BTreeSet to keep lines in order
+    for &match_idx in &matching_line_indices {
+        let start_idx = if match_idx >= before_context { match_idx - before_context } else { 0 };
+        let end_idx = std::cmp::min(match_idx + after_context, lines.len() - 1);
+
+        // Add this matching line and its context
+        for idx in start_idx..=end_idx {
+            output_lines.insert((idx, match_idx == idx)); // (line_idx, is_match)
+        }
+    }
+
+    let mut output_count = 0;
+    for (line_idx, is_match) in output_lines {
+        // Check max count limit
+        if is_match {
+            if let Some(max) = config.max_count {
+                if output_count >= max {
+                    break;
+                }
+                output_count += 1;
+            }
+        }
+
+        if is_match {
+            // This is a matching line
+            if config.only_matching {
+                // Extract only the matching parts
+                for mat in regex.find_iter(&lines[line_idx]) {
+                    writeln!(writer, "{}", mat.as_str())?;
+                }
+            } else {
+                // Output the full line with proper formatting
+                let output = format_match(config, file_path, line_idx + 1, &lines[line_idx]);
+                writeln!(writer, "{}", output)?;
+            }
+        } else {
+            // This is just context, output with dashes to separate
+            let output = format_context_line(config, file_path, line_idx + 1, &lines[line_idx]);
+            writeln!(writer, "{}", output)?;
+        }
     }
 
     Ok(has_matches)
@@ -162,8 +241,8 @@ pub fn search_paths(
     let mut effective_config = config.clone();
     effective_config.with_filename = should_show_filename;
 
-    for file_path in all_files {
-        if let Err(err) = search_file(&effective_config, &file_path, writer) {
+    for (i, file_path) in all_files.iter().enumerate() {
+        if let Err(err) = search_file(&effective_config, file_path, writer) {
             if !no_messages {
                 eprintln!("perg: {}: {}", file_path, err);
             }
@@ -172,6 +251,116 @@ pub fn search_paths(
                 PergError::FileNotFound(_) | PergError::Regex(_) => return Err(err),
                 _ => {} // Continue for other errors like I/O errors
             }
+        }
+        
+        // Add separator between files if context is enabled and there are multiple files
+        if i < all_files.len() - 1 && (config.before_context > 0 || config.after_context > 0 || config.context > 0) {
+            writeln!(writer, "--")?;
+        }
+    }
+
+    Ok(())
+}
+
+/// Search stdin for the pattern
+pub fn search_stdin(config: &SearchConfig, writer: &mut impl Write) -> Result<()> {
+    let stdin = stdin();
+    let reader = stdin.lock();
+
+    let pattern = if config.ignore_case {
+        format!("(?i){}", config.pattern)
+    } else {
+        config.pattern.clone()
+    };
+
+    let regex = Regex::new(&pattern)?;
+
+    let mut match_count = 0;
+    let mut _line_number = 0;
+    let mut lines: Vec<String> = Vec::new();
+    let mut matching_line_indices = Vec::new();
+    
+    // Read all lines to enable context functionality
+    for line_result in reader.lines() {
+        lines.push(line_result?);
+        _line_number += 1;
+    }
+
+    // Use context: if -C is specified, it overrides -A and -B
+    let before_context = if config.context > 0 { config.context } else { config.before_context };
+    let after_context = if config.context > 0 { config.context } else { config.after_context };
+
+    // First pass: find all matching lines
+    for (idx, line) in lines.iter().enumerate() {
+        let matches = regex.is_match(line);
+
+        // Apply invert match logic
+        let should_include = if config.invert_match { !matches } else { matches };
+
+        if should_include {
+            match_count += 1;
+            matching_line_indices.push(idx);
+
+            // For files_with_matches/files_without_match modes, we can't use stdin
+            if config.files_with_matches || config.files_without_match {
+                // For stdin, these modes don't make sense, so we just continue
+                continue;
+            }
+        }
+    }
+
+    // Handle count-only mode
+    if config.count {
+        writeln!(writer, "{}", match_count)?;
+        return Ok(());
+    }
+
+    // Handle files_with_matches/files_without_match modes (they don't make sense with stdin)
+    if config.files_with_matches || config.files_without_match {
+        // These modes don't apply to stdin
+        return Ok(());
+    }
+
+    // Output results with context
+    let mut output_lines = std::collections::BTreeSet::new(); // Use BTreeSet to keep lines in order
+    for &match_idx in &matching_line_indices {
+        let start_idx = if match_idx >= before_context { match_idx - before_context } else { 0 };
+        let end_idx = std::cmp::min(match_idx + after_context, lines.len() - 1);
+
+        // Add this matching line and its context
+        for idx in start_idx..=end_idx {
+            output_lines.insert((idx, match_idx == idx)); // (line_idx, is_match)
+        }
+    }
+
+    let mut output_count = 0;
+    for (line_idx, is_match) in output_lines {
+        // Check max count limit
+        if is_match {
+            if let Some(max) = config.max_count {
+                if output_count >= max {
+                    break;
+                }
+                output_count += 1;
+            }
+        }
+
+        if is_match {
+            // This is a matching line
+            if config.only_matching {
+                // Extract only the matching parts
+                for mat in regex.find_iter(&lines[line_idx]) {
+                    writeln!(writer, "{}", mat.as_str())?;
+                }
+            } else {
+                // Output the full line with proper formatting
+                let output = format_line(config, line_idx + 1, &lines[line_idx]);
+                writeln!(writer, "{}", output)?;
+            }
+        } else {
+            // This is just context, output with dashes to separate
+            let output = format_context_line_stdin(config, line_idx + 1, &lines[line_idx]);
+            writeln!(writer, "{}", output)?;
         }
     }
 
@@ -196,6 +385,50 @@ fn format_match(config: &SearchConfig, file_path: &str, line_number: usize, line
     output
 }
 
+/// Format a line from stdin (without filename prefix)
+fn format_line(config: &SearchConfig, line_number: usize, line: &str) -> String {
+    let mut output = String::new();
+
+    if config.line_number {
+        output.push_str(&line_number.to_string());
+        output.push_str(":");
+    }
+
+    output.push_str(line);
+    output
+}
+
+/// Format a context line for file output
+fn format_context_line(config: &SearchConfig, file_path: &str, line_number: usize, line: &str) -> String {
+    let mut output = String::new();
+
+    if config.with_filename {
+        output.push_str(file_path);
+        output.push_str("-");
+    }
+
+    if config.line_number {
+        output.push_str(&line_number.to_string());
+        output.push_str("-");
+    }
+
+    output.push_str(line);
+    output
+}
+
+/// Format a context line from stdin (without filename prefix)
+fn format_context_line_stdin(config: &SearchConfig, line_number: usize, line: &str) -> String {
+    let mut output = String::new();
+
+    if config.line_number {
+        output.push_str(&line_number.to_string());
+        output.push_str("-");
+    }
+
+    output.push_str(line);
+    output
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -214,6 +447,12 @@ mod tests {
             false,
             false,
             false,
+            false,        // count
+            0,            // before_context
+            0,            // after_context
+            0,            // context
+            None,         // max_count
+            false,        // only_matching
         );
 
         let mut output = Vec::new();
@@ -239,6 +478,12 @@ mod tests {
             false,
             false,
             false,
+            false,        // count
+            0,            // before_context
+            0,            // after_context
+            0,            // context
+            None,         // max_count
+            false,        // only_matching
         );
 
         let mut output = Vec::new();
@@ -264,6 +509,12 @@ mod tests {
             true, // invert_match
             false,
             false,
+            false,        // count
+            0,            // before_context
+            0,            // after_context
+            0,            // context
+            None,         // max_count
+            false,        // only_matching
         );
 
         let mut output = Vec::new();

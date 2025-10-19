@@ -43,4 +43,28 @@ pub struct Args {
     /// Only show filenames that do NOT contain matches
     #[arg(short = 'L', long)]
     pub files_without_match: bool,
+
+    /// Print a count of matching lines for each input file
+    #[arg(short = 'c', long)]
+    pub count: bool,
+
+    /// Print NUM lines of leading context before matching lines
+    #[arg(short = 'B', long = "before-context", default_value_t = 0)]
+    pub before_context: usize,
+
+    /// Print NUM lines of trailing context after matching lines
+    #[arg(short = 'A', long = "after-context", default_value_t = 0)]
+    pub after_context: usize,
+
+    /// Print NUM lines of output context
+    #[arg(short = 'C', long = "context", default_value_t = 0)]
+    pub context: usize,
+
+    /// Stop reading a file after NUM matching lines
+    #[arg(short = 'm', long = "max-count")]
+    pub max_count: Option<usize>,
+
+    /// Print only the matched (non-empty) parts of a matching line
+    #[arg(short = 'o', long = "only-matching")]
+    pub only_matching: bool,
 }
